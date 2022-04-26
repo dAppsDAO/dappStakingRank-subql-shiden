@@ -1,5 +1,5 @@
 {
-  "name": "shiden",
+  "name": "shiden-dappstaking-rewards",
   "version": "0.0.4",
   "description": "This SubQuery project can be use as a starting point for shiden network",
   "main": "dist/index.js",
@@ -9,14 +9,14 @@
     "test": "jest",
     "codegen": "./node_modules/.bin/subql codegen"
   },
-  "homepage": "https://github.com/subquery/shiden-subql-starter",
-  "repository": "github:subquery/shiden-subql-starter",
+  "homepage": "https://github.com/dappsDAO/dappStakingRank-subql-shiden",
+  "repository": "github:dappsDAO/dappStakingRank-subql-shiden",
   "files": [
     "dist",
     "schema.graphql",
     "project.yaml"
   ],
-  "author": "SubQuery Network",
+  "author": "dappsDAO",
   "license": "MIT",
   "devDependencies": {
     "@polkadot/api": "^7",
