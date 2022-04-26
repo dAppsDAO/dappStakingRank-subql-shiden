@@ -1,0 +1,24 @@
+specVersion: 0.2.0
+name: shiden
+version: 0.0.4
+description: This SubQuery project can be use as a starting point for shiden network
+repository: https://github.com/subquery/shiden-subql-starter
+schema:
+  file: ./schema.graphql
+network:
+  endpoint: wss://shiden.api.onfinality.io/public-wss
+  genesisHash: "0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108"
+  chaintypes:
+    file: ./dist/chaintypes.js
+  dictionary: https://api.subquery.network/sq/subquery/shiden-dictionary
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 1256515
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleDAppStakingReward
+          kind: substrate/EventHandler
+          filter:
+            module: dappsStaking
+            method: Reward
