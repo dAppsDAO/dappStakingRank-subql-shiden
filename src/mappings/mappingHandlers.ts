@@ -3,6 +3,23 @@ import { Contract, DAppStakingReward, Account } from "../types"
 import { Balance } from "@polkadot/types/interfaces"
 import { u32 } from "@polkadot/types"
 
+export async function handleContract(event: SubstrateEvent): Promise<void> {
+  const {
+    event: {
+      data: [account, smartContract, era, balanceOf],
+    },
+  } = event
+  const balance = correctBalance(balanceOf as Balance)
+  const contractId = JSON.parse(smartContract.toString())["evm"]
+  let contract = await Contract.get(contractId)
+  if (!contract) {
+    contract = new Contract(contractId)
+    contract.totalReward = 0
+  }
+  contract.totalReward += balance
+  await contract.save()
+}
+
 export async function handleDAppStakingReward(event: SubstrateEvent): Promise<void> {
   const {
     event: {
@@ -13,8 +30,6 @@ export async function handleDAppStakingReward(event: SubstrateEvent): Promise<vo
   const accountId = account.toString()
   const contractId = JSON.parse(smartContract.toString())["evm"]
   logger.info("\nevm: " + contractId)
-  await ensureAccount(accountId, balance)
-  await ensureContract(contractId, balance)
   const entity = new DAppStakingReward(`${event.block.block.header.number}-${event.idx.toString()}`)
   entity.accountId = accountId
   entity.contractId = contractId
@@ -24,7 +39,14 @@ export async function handleDAppStakingReward(event: SubstrateEvent): Promise<vo
   await entity.save()
 }
 
-async function ensureAccount(accountId: string, balance: number): Promise<void> {
+export async function handleAccount(event: SubstrateEvent): Promise<void> {
+  const {
+    event: {
+      data: [accountAddress, smartContract, era, balanceOf],
+    },
+  } = event
+  const balance = correctBalance(balanceOf as Balance)
+  const accountId = accountAddress.toString()
   let account = await Account.get(accountId)
   if (!account) {
     account = new Account(accountId)
@@ -32,16 +54,6 @@ async function ensureAccount(accountId: string, balance: number): Promise<void> 
   }
   account.totalRewarded += balance
   await account.save()
-}
-
-async function ensureContract(contractId: string, balance: number): Promise<void> {
-  let contract = await Contract.get(contractId)
-  if (!contract) {
-    contract = new Contract(contractId)
-    contract.totalReward = 0
-  }
-  contract.totalReward += balance
-  await contract.save()
 }
 
 function insertStr(str, index, insert) {

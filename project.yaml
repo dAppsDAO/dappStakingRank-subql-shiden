@@ -17,7 +17,17 @@ dataSources:
     mapping:
       file: ./dist/index.js
       handlers:
+        - handler: handleContract
+          kind: substrate/EventHandler
+          filter:
+            module: dappsStaking
+            method: Reward
         - handler: handleDAppStakingReward
+          kind: substrate/EventHandler
+          filter:
+            module: dappsStaking
+            method: Reward
+        - handler: handleAccount
           kind: substrate/EventHandler
           filter:
             module: dappsStaking
