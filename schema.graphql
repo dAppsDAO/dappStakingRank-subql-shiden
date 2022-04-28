@@ -1,5 +1,5 @@
 type Contract @entity {
-  id: ID! #SmartContract
+  id: ID! #SmartContractAddress
   totalReward: Float!
   rewards: [dAppStakingReward] @derivedFrom(field: "contract")
 }
